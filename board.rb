@@ -23,17 +23,23 @@ class Board
   end
 
   def render
+    header = "\n  abcdegfh  \n".colorize(:light_black)
     board_colors = [:cyan, :light_cyan]
 
-    rows.map do |row|
+    stringified_rows = rows.map.with_index do |row, index|
+      notation = (SIZE - index).to_s.colorize(:light_black)
       board_colors.rotate!
 
-      row.map(&stringify_space).map do |space|
+      stringified_row = row.map(&stringify_space).map do |space|
         board_colors.rotate!
 
         space.colorize(background: board_colors.first)
-      end.join
-    end.join("\n")
+      end
+
+      "#{notation} #{stringified_row.join} #{notation}"
+    end
+
+    header + stringified_rows.join("\n") + header
   end
 
   def add_piece(piece, pos)
