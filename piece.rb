@@ -44,7 +44,11 @@ class Piece
   end
 
   def king?
-    king
+    @king
+  end
+
+  def king!
+    @king = true
   end
 
   def ally?(piece)
@@ -67,11 +71,19 @@ class Piece
     perform_jump!(end_pos)
   end
 
+  def maybe_promote
+    row = pos.first
+    top_row = 0
+    bottom_row = Board::SIZE - 1
+
+    king! if (blue? && row == top_row) || (red? && row == bottom_row)
+  end
+
   protected
   attr_reader :color
 
   private
-  attr_reader :king, :deltas, :board
+  attr_reader :deltas, :board
   attr_writer :pos
 
   def slide_moves
@@ -79,7 +91,7 @@ class Piece
 
     deltas.each do |delta|
       slide_pos = self.class.add_coords(pos, delta)
-      next if board.piece?(jump_pos) || !board.in_range?(jump_pos) 
+      next if board.piece?(jump_pos) || !board.in_range?(jump_pos)
 
       slide_moves << slide_pos
     end
