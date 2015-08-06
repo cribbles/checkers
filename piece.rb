@@ -25,7 +25,7 @@ class Piece
   def inspect
     { color:  color,
       king:   king,
-      deltas: deltas }
+      deltas: deltas }.inspect
   end
 
   def to_s
