@@ -22,26 +22,6 @@ class Board
     (SIZE-3...SIZE).each { |row| fill_row(row, :blue) }
   end
 
-  def render
-    header = "\n  abcdegfh  \n".colorize(:light_black)
-    board_colors = [:cyan, :light_cyan]
-
-    stringified_rows = rows.map.with_index do |row, index|
-      notation = (SIZE - index).to_s.colorize(:light_black)
-      board_colors.rotate!
-
-      stringified_row = row.map(&stringify_space).map do |space|
-        board_colors.rotate!
-
-        space.colorize(background: board_colors.first)
-      end
-
-      "#{notation} #{stringified_row.join} #{notation}"
-    end
-
-    header + stringified_rows.join("\n") + header
-  end
-
   def add_piece(piece, pos)
     raise 'space not empty' unless empty?(pos)
 
@@ -83,6 +63,26 @@ class Board
     duped_board
   end
 
+  def render
+    header = "\n   a  b  c  d  e  f  g  h   \n".colorize(:light_black)
+    board_colors = [:cyan, :light_cyan]
+
+    stringified_rows = rows.map.with_index do |row, index|
+      notation = (SIZE - index).to_s.colorize(:light_black)
+      board_colors.rotate!
+
+      stringified_row = row.map(&stringify_space).map do |space|
+        board_colors.rotate!
+
+        space.colorize(background: board_colors.first)
+      end
+
+      "#{notation} #{stringified_row.join} #{notation}"
+    end
+
+    header + stringified_rows.join("\n") + header
+  end
+
   private
   attr_reader :rows
 
@@ -96,6 +96,6 @@ class Board
   end
 
   def stringify_space
-    -> (space) { space.nil? ? ' ' : space.to_s }
+    -> (space) { space.nil? ? '   ' : space.to_s }
   end
 end
