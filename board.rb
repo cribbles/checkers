@@ -67,6 +67,16 @@ class Board
     pos.all? { |coord| coord.between?(0, SIZE - 1) }
   end
 
+  def dup
+    duped_board = self.class.new
+
+    pieces.each do |piece|
+      Piece.new(duped_board, piece.pos, piece.color)
+    end
+
+    duped_board
+  end
+
   private
   attr_reader :rows
 

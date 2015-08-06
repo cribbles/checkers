@@ -1,3 +1,4 @@
+require 'byebug'
 require 'colorize'
 require_relative 'modules/traversable'
 
@@ -11,7 +12,8 @@ class Piece
     blue: [[-1, 1], [-1, -1]]
   }
 
-  attr_reader :pos, :color
+  attr_reader :color
+  attr_accessor :pos
 
   def initialize(board, pos, color)
     raise unless COLORS.include?(color)
@@ -27,7 +29,8 @@ class Piece
 
   def inspect
     { color:  color,
-      king:   king,
+      pos:    pos,
+      king:   king?,
       deltas: deltas }.inspect
   end
 
@@ -59,6 +62,23 @@ class Piece
     self.color != piece.color
   end
 
+  def perform_moves(move_sequence)
+    raise InvalidMoveError if !valid_move_seq?(move_sequence)
+
+    perform_moves!(move_sequence)
+  end
+
+  def maybe_promote
+    row = pos.first
+    top_row = 0
+    bottom_row = Board::SIZE - 1
+
+    king! if (blue? && row == top_row) || (red? && row == bottom_row)
+  end
+
+  protected
+  attr_reader :board
+
   def perform_slide(end_pos)
     return false unless slide_moves.include?(end_pos)
 
@@ -71,27 +91,28 @@ class Piece
     perform_jump!(end_pos)
   end
 
-  def maybe_promote
-    row = pos.first
-    top_row = 0
-    bottom_row = Board::SIZE - 1
+  def perform_moves!(move_sequence)
+    if move_sequence.length == 1
+      end_pos = move_sequence.first
+      return false unless perform_slide(end_pos) || perform_jump(end_pos)
+    else
+      move_sequence.each do |end_pos|
+        return false unless perform_jump(end_pos)
+      end
+    end
 
-    king! if (blue? && row == top_row) || (red? && row == bottom_row)
+    true
   end
-
-  protected
-  attr_reader :color
 
   private
   attr_reader :deltas, :board
-  attr_writer :pos
 
   def slide_moves
     slide_moves = []
 
     deltas.each do |delta|
       slide_pos = self.class.add_coords(pos, delta)
-      next if board.piece?(jump_pos) || !board.in_range?(jump_pos)
+      next if board.piece?(slide_pos) || !board.in_range?(slide_pos)
 
       slide_moves << slide_pos
     end
@@ -127,4 +148,14 @@ class Piece
     board.remove_piece(opponent)
     perform_slide!(end_pos)
   end
+
+  def valid_move_seq?(move_sequence)
+    duped_board = board.dup
+    duped_piece = duped_board[pos]
+
+    duped_piece.perform_moves!(move_sequence)
+  end
+end
+
+class InvalidMoveError < StandardError
 end
