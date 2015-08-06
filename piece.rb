@@ -1,10 +1,10 @@
+require 'colorize'
+
 class Piece
-  MOVES = {
+  DELTAS = {
     red:    [[1, -1], [1, 1]],
     yellow: [[-1, 1], [-1, -1]]
   }
-
-  attr_reader :moves
 
   def initialize(board, color)
     raise unless [:red, :yellow].include?(color)
@@ -12,14 +12,39 @@ class Piece
     @board = board
     @color = color
     @king = false
-    @moves = MOVES[color]
+    @deltas = DELTAS[color]
+  end
+
+  def inspect
+    { color:  color,
+      king:   king,
+      deltas: deltas }
+  end
+
+  def to_s
+    "O".colorize(:color)
   end
 
   def red?
-    @color == red
+    color == red
   end
 
   def yellow?
-    @color == yellow
+    color == yellow
+  end
+
+  def king?
+    king
+  end
+
+  def deltas
+    @deltas.dup
+  end
+
+  private
+  attr_reader :color, :king
+
+  def _deltas
+    @deltas
   end
 end
