@@ -47,6 +47,10 @@ class Board
     self[start_pos] = nil
   end
 
+  def remove_piece(piece)
+    self[piece.pos] = nil
+  end
+
   def empty?(pos)
     self[pos].nil?
   end
