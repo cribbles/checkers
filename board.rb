@@ -28,7 +28,7 @@ class Board
     rows.map do |row|
       board_colors.rotate!
 
-      row.map(&stringify_row).map do |space|
+      row.map(&stringify_space).map do |space|
         board_colors.rotate!
 
         space.colorize(background: board_colors.first)
@@ -62,7 +62,7 @@ class Board
     end
   end
 
-  def stringify_row
+  def stringify_space
     -> (space) { space.nil? ? ' ' : space.to_s }
   end
 end
