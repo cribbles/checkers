@@ -44,14 +44,27 @@ class Piece
     king
   end
 
-  def deltas
-    @deltas.dup
+  def perform_slide(end_pos)
+    raise "can't slide to #{end_pos}" unless slide_moves.include?(end_pos)
+    raise "slide blocked - maybe try jumping?" if board.piece?(end_pos)
+
+    perform_slide!(end_pos)
   end
 
   private
-  attr_reader :color, :king
+  attr_reader :color, :king, :deltas, :board
+  attr_writer :pos
 
-  def _deltas
-    @deltas
+  def slide_moves
+    deltas.map do |delta|
+      row, col = pos
+      row_delta, col_delta = delta
+      [row + row_delta, col + col_delta]
+    end
+  end
+
+  def perform_slide!(end_pos)
+    board.move_piece(pos, end_pos)
+    self.pos = end_pos
   end
 end

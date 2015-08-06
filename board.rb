@@ -42,8 +42,17 @@ class Board
     self[pos] = piece
   end
 
+  def move_piece(start_pos, end_pos)
+    self[end_pos] = self[start_pos]
+    self[start_pos] = nil
+  end
+
   def empty?(pos)
     self[pos].nil?
+  end
+
+  def piece?(pos)
+    !empty?(pos)
   end
 
   def pieces
