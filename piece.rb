@@ -8,13 +8,18 @@ class Piece
     blue: [[-1, 1], [-1, -1]]
   }
 
-  def initialize(board, color)
+  attr_reader :pos, :color
+
+  def initialize(board, pos, color)
     raise unless COLORS.include?(color)
 
     @board = board
+    @pos = pos
     @color = color
     @king = false
     @deltas = DELTAS[color]
+
+    board.add_piece(self, pos)
   end
 
   def inspect

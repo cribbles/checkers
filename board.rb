@@ -36,6 +36,16 @@ class Board
     end.join("\n")
   end
 
+  def add_piece(piece, pos)
+    raise 'space not empty' unless empty?(pos)
+
+    self[pos] = piece
+  end
+
+  def empty?(pos)
+    self[pos].nil?
+  end
+
   private
   attr_reader :rows
 
@@ -44,7 +54,7 @@ class Board
 
     (starting_coord...SIZE).step(2) do |col|
       pos = [row, col]
-      self[pos] = Piece.new(self, color)
+      self[pos] = Piece.new(self, pos, color)
     end
   end
 
