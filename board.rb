@@ -46,6 +46,10 @@ class Board
     self[pos].nil?
   end
 
+  def pieces
+    rows.flatten.compact
+  end
+
   private
   attr_reader :rows
 
