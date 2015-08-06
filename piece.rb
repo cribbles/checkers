@@ -50,10 +50,6 @@ class Piece
     @king
   end
 
-  def king!
-    @king = true
-  end
-
   def ally?(piece)
     self.color == piece.color
   end
@@ -73,7 +69,7 @@ class Piece
     top_row = 0
     bottom_row = Board::SIZE - 1
 
-    king! if (blue? && row == top_row) || (red? && row == bottom_row)
+    promote if (blue? && row == top_row) || (red? && row == bottom_row)
   end
 
   protected
@@ -106,6 +102,10 @@ class Piece
 
   private
   attr_reader :deltas, :board
+
+  def promote
+    @king = true
+  end
 
   def slide_moves
     slide_moves = []
