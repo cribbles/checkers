@@ -38,6 +38,6 @@ class HumanPlayer
   end
 
   def notated?(move)
-    move.length == 2 && move =~ /[a-h][1-8]/
+    move =~ /\A[a-h]{1}[1-8]{1}\z/
   end
 end

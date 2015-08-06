@@ -19,6 +19,7 @@ class Game
     loop do
       puts board.render
       puts "\n#{current_player}'s turn"
+
       play_turn
       switch_players!
     end
