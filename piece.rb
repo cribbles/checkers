@@ -1,13 +1,15 @@
 require 'colorize'
 
 class Piece
+  COLORS = [:red, :blue]
+
   DELTAS = {
-    red:    [[1, -1], [1, 1]],
-    yellow: [[-1, 1], [-1, -1]]
+    red:  [[1, -1], [1, 1]],
+    blue: [[-1, 1], [-1, -1]]
   }
 
   def initialize(board, color)
-    raise unless [:red, :yellow].include?(color)
+    raise unless COLORS.include?(color)
 
     @board = board
     @color = color
@@ -22,15 +24,15 @@ class Piece
   end
 
   def to_s
-    "O".colorize(:color)
+    "●".colorize(color)
   end
 
   def red?
-    color == red
+    color == :red
   end
 
-  def yellow?
-    color == yellow
+  def blue?
+    color == :blue
   end
 
   def king?

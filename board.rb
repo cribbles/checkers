@@ -4,33 +4,51 @@ class Board
   SIZE = 8
 
   def initialize
-    @grid = Array.new(SIZE) { Array.new(SIZE) }
+    @rows = Array.new(SIZE) { Array.new(SIZE) }
   end
 
   def [](pos)
     row, col = pos
-    grid[row][col]
+    rows[row][col]
   end
 
   def []=(pos, mark)
     row, col = pos
-    grid[row][col] = mark
+    rows[row][col] = mark
   end
 
-  def fill_grid
-    (0..2).each { |row| populate_row(row, :red) }
-    (SIZE-3...SIZE).each { |row| populate_row(row, :yellow) }
+  def fill_rows
+    (0..2).each          { |row| fill_row(row, :red) }
+    (SIZE-3...SIZE).each { |row| fill_row(row, :blue) }
+  end
+
+  def render
+    board_colors = [:cyan, :light_cyan]
+
+    rows.map do |row|
+      board_colors.rotate!
+
+      row.map(&stringify_row).map do |space|
+        board_colors.rotate!
+
+        space.colorize(background: board_colors.first)
+      end.join
+    end.join("\n")
   end
 
   private
-  attr_reader :grid
+  attr_reader :rows
 
   def fill_row(row, color)
     starting_coord = (row.even? ? 0 : 1)
 
     (starting_coord...SIZE).step(2) do |col|
       pos = [row, col]
-      self[pos] = Piece.new(self, :red)
+      self[pos] = Piece.new(self, color)
     end
+  end
+
+  def stringify_row
+    -> (space) { space.nil? ? ' ' : space.to_s }
   end
 end
