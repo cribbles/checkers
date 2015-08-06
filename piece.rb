@@ -1,6 +1,9 @@
 require 'colorize'
+require_relative 'modules/traversable'
 
 class Piece
+  extend Traversable
+
   COLORS = [:red, :blue]
 
   DELTAS = {
@@ -53,16 +56,15 @@ class Piece
   end
 
   def perform_slide(end_pos)
-    raise "can't slide to #{end_pos}" unless slide_moves.include?(end_pos)
-    raise "slide blocked - maybe try jumping?" if board.piece?(end_pos)
+    return false unless slide_moves.include?(end_pos)
 
     perform_slide!(end_pos)
   end
 
   def perform_jump(end_pos)
-    raise "can't jump to #{end_pos}" unless jump_moves.include?(end_pos)
+    return false unless jump_moves.include?(end_pos)
 
-    perform_jump!(end_pos, opponent: valid_jumps[end_pos])
+    perform_jump!(end_pos)
   end
 
   protected
@@ -73,34 +75,32 @@ class Piece
   attr_writer :pos
 
   def slide_moves
-    deltas.map do |delta|
-      row, col = pos
-      row_delta, col_delta = delta
-      [row + row_delta, col + col_delta]
+    slide_moves = []
+
+    deltas.each do |delta|
+      slide_pos = self.class.add_coords(pos, delta)
+      next if board.piece?(jump_pos) || !board.in_range?(jump_pos) 
+
+      slide_moves << slide_pos
     end
+
+    slide_moves
   end
 
   def jump_moves
-    valid_jumps.keys
-  end
-
-  def valid_jumps
-    valid_jumps = {}
+    jump_moves = []
 
     deltas.each do |delta|
-      row, col = pos
-      row_delta, col_delta = delta
-
-      step_pos = [row + row_delta, col + col_delta]
+      step_pos = self.class.add_coords(pos, delta)
       next unless board.piece?(step_pos) && opponent?(board[step_pos])
 
-      jump_pos = [row + (row_delta * 2), col + (col_delta * 2)]
-      next if board.piece?(jump_pos)
+      jump_pos = self.class.add_coords(step_pos, delta)
+      next if board.piece?(jump_pos) || !board.in_range?(jump_pos)
 
-      valid_jumps.merge!({ jump_pos => board[step_pos] })
+      jump_moves << jump_pos
     end
 
-    valid_jumps
+    jump_moves
   end
 
   def perform_slide!(end_pos)
@@ -108,7 +108,10 @@ class Piece
     self.pos = end_pos
   end
 
-  def perform_jump!(end_pos, opponent: opponent)
+  def perform_jump!(end_pos)
+    opponent_pos = self.class.intermediate_coords(pos, end_pos)
+    opponent = board[opponent_pos]
+
     board.remove_piece(opponent)
     perform_slide!(end_pos)
   end

@@ -63,6 +63,10 @@ class Board
     rows.flatten.compact
   end
 
+  def in_range?(pos)
+    pos.all? { |coord| coord.between?(0, SIZE - 1) }
+  end
+
   private
   attr_reader :rows
 
