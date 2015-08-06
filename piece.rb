@@ -6,9 +6,10 @@ class Piece
 
   attr_reader :moves
 
-  def initialize(color)
+  def initialize(board, color)
     raise unless [:red, :yellow].include?(color)
 
+    @board = board
     @color = color
     @king = false
     @moves = MOVES[color]
