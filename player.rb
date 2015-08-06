@@ -1,15 +1,19 @@
 require 'byebug'
 
 class HumanPlayer
-
   def initialize(color)
     raise unless Piece::COLORS.include?(color)
 
     @color = color
   end
 
+  def to_s
+    color.to_s.capitalize.colorize(color)
+  end
+
   def get_moves
-    puts "select your next move(s), e.g. 'd3, e4'"
+    puts "\nselect your next move(s), e.g. 'd3, e4'"
+    print ">"
     notation = gets.chomp.gsub(/ /,'').split(',')
 
     parse(notation)
@@ -19,6 +23,7 @@ class HumanPlayer
   end
 
   private
+  attr_reader :color
 
   def parse(notation)
     notation.map do |move|

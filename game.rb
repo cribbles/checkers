@@ -18,10 +18,15 @@ class Game
 
     loop do
       puts board.render
+      puts "\n#{current_player}'s turn"
       play_turn
       switch_players!
     end
   end
+
+  private
+  attr_reader :players, :red, :blue
+  attr_writer :current_player
 
   def switch_players!
     self.current_player = (current_player == blue) ? red : blue
@@ -36,8 +41,4 @@ class Game
     puts "invalid move, try again"
     retry
   end
-
-  private
-  attr_reader :players, :red, :blue
-  attr_writer :current_player
 end
