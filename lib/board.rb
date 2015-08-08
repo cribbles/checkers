@@ -29,7 +29,8 @@ class Board
   end
 
   def move_piece(start_pos, end_pos)
-    self[end_pos] = self[start_pos]
+    piece = self[end_pos] = self[start_pos]
+    piece.maybe_promote
     self[start_pos] = nil
   end
 
@@ -77,7 +78,7 @@ class Board
     rows = self.rows.map.with_index do |row, row_index|
       notation = (SIZE - row_index).to_s.colorize(:light_black)
       spaces = row.map { |space| space.nil? ? '   ' : space.to_s }
- 
+
       spaces.map!.with_index do |space, space_index|
         parity = row_index + space_index
         color = (parity.even? ? :cyan : :light_cyan)
