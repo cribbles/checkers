@@ -8,7 +8,7 @@ class Game
   def initialize(players = nil)
     @board = Board.new
 
-    players ||= { red:  HumanPlayer.new(:red)
+    players ||= { red:  HumanPlayer.new(:red),
                   blue: HumanPlayer.new(:blue) }
 
     @red, @blue = players[:red], players[:blue]
@@ -19,7 +19,7 @@ class Game
     board.fill_rows
 
     until board.won?
-      display_board if human_player?
+      display_board
       play_turn
       switch_players!
     end
@@ -36,14 +36,15 @@ class Game
     self.current_player = (current_player == blue) ? red : blue
   end
 
-  def human_player?
-    current_player.is_a?(HumanPlayer)
+  def computer_player?
+    current_player.is_a?(ComputerPlayer)
   end
 
   def display_board
     system('clear')
     puts board.render
     puts "\n#{current_player}'s turn"
+    sleep(1) if computer_player?
   end
 
   def play_turn
