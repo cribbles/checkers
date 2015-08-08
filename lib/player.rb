@@ -1,6 +1,8 @@
 require 'byebug'
 
 class HumanPlayer
+  attr_reader :color
+
   def initialize(color)
     raise unless Piece::COLORS.include?(color)
 
@@ -17,13 +19,12 @@ class HumanPlayer
     notation = gets.chomp.gsub(/ /,'').split(',')
 
     parse(notation)
-  rescue
+  rescue UserInputError
     puts "invalid input - try again"
     retry
   end
 
   private
-  attr_reader :color
 
   def parse(notation)
     notation.map do |move|
@@ -40,4 +41,7 @@ class HumanPlayer
   def notated?(move)
     move =~ /\A[a-h]{1}[1-8]{1}\z/
   end
+end
+
+class UserInputError < StandardError
 end

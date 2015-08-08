@@ -37,9 +37,17 @@ class Game
   def play_turn
     moves = current_player.get_moves
     start_pos = moves.shift
-
-    board[start_pos].perform_moves(moves)
-  rescue InvalidMoveError
+    start_piece = board[start_pos]
+ 
+    if !start_piece
+      raise InvalidMoveError, "couldn't find piece at starting position"
+    elsif start_piece.color != current_player.color
+      raise InvalidMoveError, "not your piece!"
+    else
+      board[start_pos].perform_moves(moves)
+    end
+  rescue InvalidMoveError => e
+    puts e unless e.nil?
     puts "invalid move, try again"
     retry
   end
