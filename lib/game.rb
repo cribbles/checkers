@@ -16,7 +16,7 @@ class Game
   def play
     board.fill_rows
 
-    loop do
+    until board.won? 
       system 'clear'
       puts board.render
       puts "\n#{current_player}'s turn"
@@ -24,6 +24,9 @@ class Game
       play_turn
       switch_players!
     end
+
+    winner = board.winner.capitalize.colorize(:winner)
+    puts "Game over!\n\nWinner: #{winner}"
   end
 
   private

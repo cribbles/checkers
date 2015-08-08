@@ -49,6 +49,14 @@ class Board
     rows.flatten.compact
   end
 
+  def won?
+    pieces.map(&:color).uniq.one?
+  end
+
+  def winner
+    pieces.first.color
+  end
+
   def in_range?(pos)
     pos.all? { |coord| coord.between?(0, SIZE - 1) }
   end

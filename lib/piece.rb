@@ -64,14 +64,6 @@ class Piece
     perform_moves!(move_sequence)
   end
 
-  def maybe_promote
-    row = pos.first
-    top_row = 0
-    bottom_row = Board::SIZE - 1
-
-    promote if (blue? && row == top_row) || (red? && row == bottom_row)
-  end
-
   protected
   attr_reader :board
 
@@ -148,6 +140,7 @@ class Piece
   def perform_slide!(end_pos)
     board.move_piece(pos, end_pos)
     self.pos = end_pos
+    maybe_promote
   end
 
   def perform_jump!(end_pos)
@@ -156,6 +149,14 @@ class Piece
 
     board.remove_piece(opponent)
     perform_slide!(end_pos)
+  end
+
+  def maybe_promote
+    row = pos.first
+    top_row = 0
+    bottom_row = Board::SIZE - 1
+
+    promote if (blue? && row == top_row) || (red? && row == bottom_row)
   end
 
   def valid_move_seq?(move_sequence)
