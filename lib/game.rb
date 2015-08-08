@@ -35,7 +35,17 @@ class Game
   end
 
   def play_turn
-    moves = current_player.get_moves
+    moves = []
+    moves = current_player.get_moves until moves.any?
+
+    perform_moves(moves)
+  rescue InvalidMoveError => e
+    puts e.to_s unless e.nil?
+    puts "invalid move, try again"
+    retry
+  end
+
+  def perform_moves(moves)
     start_pos = moves.shift
     start_piece = board[start_pos]
  
@@ -46,9 +56,5 @@ class Game
     else
       board[start_pos].perform_moves(moves)
     end
-  rescue InvalidMoveError => e
-    puts e unless e.nil?
-    puts "invalid move, try again"
-    retry
   end
 end

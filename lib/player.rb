@@ -19,19 +19,16 @@ class HumanPlayer
     puts "\nselect your next move(s), e.g. 'd3, e4'"
     print ">"
     notation = gets.chomp.gsub(/ /,'').split(',')
+
     abort if notation.first =~ ABORT_REGEX
-    
     parse(notation)
-  rescue UserInputError
-    puts "invalid input - try again"
-    retry
   end
 
   private
 
   def parse(notation)
     notation.map do |move|
-      raise UserInputError unless notated?(move)
+      raise InvalidMoveError unless notated?(move)
 
       notated_row, notated_col = move.chars.reverse
       row = Board::SIZE - notated_row.to_i
@@ -44,7 +41,4 @@ class HumanPlayer
   def notated?(move)
     move =~ /\A[a-h]{1}[1-8]{1}\z/
   end
-end
-
-class UserInputError < StandardError
 end
