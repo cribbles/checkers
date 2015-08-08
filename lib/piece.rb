@@ -108,6 +108,12 @@ class Piece
 
   def promote
     @king = true
+
+    DELTAS[opponent].each { |delta| deltas << delta }
+  end
+
+  def opponent
+    COLORS.reject { |color| color == self.color }.first
   end
 
   def slide_moves
