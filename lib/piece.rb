@@ -8,8 +8,8 @@ class Piece
   COLORS = [:red, :blue]
 
   DELTAS = {
-    red:  [[1, -1], [1, 1]],
-    blue: [[-1, 1], [-1, -1]]
+    red:  [[ 1, -1], [ 1,  1]],
+    blue: [[-1,  1], [-1, -1]]
   }
 
   attr_reader :color
@@ -88,16 +88,19 @@ class Piece
   end
 
   def perform_moves!(move_sequence)
-    if move_sequence.length == 1
+    case move_sequence.length <=> 1
+    when -1
+      false
+    when 0
       end_pos = move_sequence.first
-      return false unless perform_slide(end_pos) || perform_jump(end_pos)
-    else
+      perform_slide(end_pos) || perform_jump(end_pos)
+    when 1
       move_sequence.each do |end_pos|
         return false unless perform_jump(end_pos)
       end
-    end
 
-    true
+      true
+    end
   end
 
   private
