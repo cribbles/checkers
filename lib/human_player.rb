@@ -5,7 +5,7 @@ class HumanPlayer
 
   attr_reader :color
 
-  def initialize(color)
+  def initialize(color, board)
     raise unless Piece::COLORS.include?(color)
 
     @color = color

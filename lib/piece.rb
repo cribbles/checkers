@@ -174,6 +174,3 @@ class Piece
     duped_piece.perform_moves!(move_sequence)
   end
 end
-
-class InvalidMoveError < StandardError
-end

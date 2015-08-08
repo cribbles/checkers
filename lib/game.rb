@@ -5,12 +5,11 @@ require_relative 'computer_player'
 class Game
   attr_reader :current_player, :board, :red, :blue
 
-  def initialize(players = nil)
-    @board = Board.new
-
+  def initialize(board, players = nil)
     players ||= { red:  ComputerPlayer.new(:red, board),
                   blue: ComputerPlayer.new(:blue, board) }
 
+    @board = board
     @red, @blue = players[:red], players[:blue]
     @current_player = blue
   end
@@ -25,7 +24,7 @@ class Game
     end
 
     display_board
-    puts "Game over!\n\nWinner: #{get_winner}\n"
+    puts "Game over!\n\nWinner: #{get_winner}\n\n"
   end
 
   private
@@ -78,4 +77,10 @@ class Game
   def get_winner
     [red, blue].find { |player| player.color == board.winner }
   end
+end
+
+class InvalidMoveError < StandardError
+end
+
+class UserInputError < StandardError
 end
