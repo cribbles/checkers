@@ -17,6 +17,10 @@ class Board
     rows[row][col] = mark
   end
 
+  def in_range?(pos)
+    pos.all? { |coord| coord.between?(0, SIZE - 1) }
+  end
+
   def fill_rows
     (0..2).each          { |row| fill_row(row, :red) }
     (SIZE-3...SIZE).each { |row| fill_row(row, :blue) }
@@ -39,10 +43,14 @@ class Board
   end
 
   def empty?(pos)
+    return false unless in_range?(pos)
+
     self[pos].nil?
   end
 
   def piece?(pos)
+    return false unless in_range?(pos)
+
     !empty?(pos)
   end
 
@@ -56,10 +64,6 @@ class Board
 
   def winner
     pieces.first.color
-  end
-
-  def in_range?(pos)
-    pos.all? { |coord| coord.between?(0, SIZE - 1) }
   end
 
   def dup

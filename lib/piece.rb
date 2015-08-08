@@ -49,7 +49,7 @@ class Piece
 
     deltas.each do |delta|
       slide_pos = self.class.add_coords(pos, delta)
-      next if board.piece?(slide_pos) || !board.in_range?(slide_pos)
+      next unless empty_space?(slide_pos)
 
       slide_moves << slide_pos
     end
@@ -62,10 +62,10 @@ class Piece
 
     deltas.each do |delta|
       step_pos = self.class.add_coords(pos, delta)
-      next unless board.piece?(step_pos) && opponent?(board[step_pos])
+      next unless opponent?(step_pos)
 
       jump_pos = self.class.add_coords(step_pos, delta)
-      next if board.piece?(jump_pos) || !board.in_range?(jump_pos)
+      next unless empty_space?(jump_pos)
 
       jump_moves << jump_pos
     end
@@ -100,8 +100,17 @@ class Piece
     self.color == piece.color
   end
 
-  def opponent?(piece)
-    self.color != piece.color
+  def empty_space?(end_pos)
+    board.in_range?(end_pos) && board.empty?(end_pos)
+  end
+
+  def opponent?(end_pos)
+    if board.in_range?(end_pos) && board.piece?(end_pos)
+      piece = board[end_pos]
+      piece.color != self.color
+    else
+      false
+    end
   end
 
   def perform_slide(end_pos)

@@ -8,8 +8,8 @@ class Game
   def initialize(players = nil)
     @board = Board.new
 
-    players ||= { red:  HumanPlayer.new(:red),
-                  blue: HumanPlayer.new(:blue) }
+    players ||= { red:  ComputerPlayer.new(:red, board),
+                  blue: ComputerPlayer.new(:blue, board) }
 
     @red, @blue = players[:red], players[:blue]
     @current_player = blue
@@ -24,7 +24,7 @@ class Game
       switch_players!
     end
 
-    winner = board.winner.capitalize.colorize(:winner)
+    winner = get_winner
     puts "Game over!\n\nWinner: #{winner}"
   end
 
@@ -69,5 +69,9 @@ class Game
     else
       board[start_pos].perform_moves(moves)
     end
+  end
+
+  def get_winner
+    [red, blue].find { |player| player.color == board.winner }
   end
 end
