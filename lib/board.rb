@@ -65,26 +65,28 @@ class Board
 
   def render
     header = "\n   a  b  c  d  e  f  g  h   \n".colorize(:light_black)
-    board_colors = [:cyan, :light_cyan]
 
-    stringified_rows = rows.map.with_index do |row, index|
-      notation = (SIZE - index).to_s.colorize(:light_black)
-      board_colors.rotate!
+    rows = self.rows.map.with_index do |row, row_index|
+      notation = (SIZE - row_index).to_s.colorize(:light_black)
+      spaces = row.map { |space| space.nil? ? '   ' : space.to_s }
+ 
+      spaces.map!.with_index do |space, space_index|
+        parity = row_index + space_index
+        color = (parity.even? ? :cyan : :light_cyan)
 
-      stringified_row = row.map(&stringify_space).map do |space|
-        board_colors.rotate!
-
-        space.colorize(background: board_colors.first)
+        space.colorize(background: color)
       end
 
-      "#{notation} #{stringified_row.join} #{notation}"
+      "#{notation} #{spaces.join} #{notation}"
     end
 
-    header + stringified_rows.join("\n") + header
+    header + rows.join("\n") + header
   end
 
-  private
+  protected
   attr_reader :rows
+
+  private
 
   def fill_row(row, color)
     starting_coord = (row.even? ? 0 : 1)
@@ -93,9 +95,5 @@ class Board
       pos = [row, col]
       self[pos] = Piece.new(self, pos, color)
     end
-  end
-
-  def stringify_space
-    -> (space) { space.nil? ? '   ' : space.to_s }
   end
 end
