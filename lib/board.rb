@@ -34,7 +34,6 @@ class Board
 
   def move_piece(start_pos, end_pos)
     piece = self[end_pos] = self[start_pos]
-    piece.maybe_promote
     self[start_pos] = nil
   end
 

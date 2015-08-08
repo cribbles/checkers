@@ -24,8 +24,8 @@ class Game
       switch_players!
     end
 
-    winner = get_winner
-    puts "Game over!\n\nWinner: #{winner}"
+    display_board
+    puts "Game over!\n\nWinner: #{get_winner}\n"
   end
 
   private
@@ -43,8 +43,11 @@ class Game
   def display_board
     system('clear')
     puts board.render
-    puts "\n#{current_player}'s turn"
-    sleep(1) if computer_player?
+
+    if !board.won?
+      puts "\n#{current_player}'s turn"
+      sleep(1) if computer_player?
+    end
   end
 
   def play_turn
@@ -60,14 +63,15 @@ class Game
 
   def perform_moves(moves)
     start_pos = moves.shift
-    start_piece = board[start_pos]
+    piece = board[start_pos]
 
-    if !start_piece
+    if !piece
       raise InvalidMoveError, "couldn't find piece at starting position"
-    elsif start_piece.color != current_player.color
+    elsif piece.color != current_player.color
       raise InvalidMoveError, "not your piece!"
     else
-      board[start_pos].perform_moves(moves)
+      piece.perform_moves(moves)
+      piece.maybe_promote
     end
   end
 
