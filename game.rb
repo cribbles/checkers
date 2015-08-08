@@ -17,6 +17,7 @@ class Game
     board.fill_rows
 
     loop do
+      system 'clear'
       puts board.render
       puts "\n#{current_player}'s turn"
 
