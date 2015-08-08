@@ -1,6 +1,8 @@
 require 'byebug'
 
 class HumanPlayer
+  ABORT_REGEX = /\Aq\z|\Aquit\z|\Aexit\z/
+
   attr_reader :color
 
   def initialize(color)
@@ -17,7 +19,8 @@ class HumanPlayer
     puts "\nselect your next move(s), e.g. 'd3, e4'"
     print ">"
     notation = gets.chomp.gsub(/ /,'').split(',')
-
+    abort if notation.first =~ ABORT_REGEX
+    
     parse(notation)
   rescue UserInputError
     puts "invalid input - try again"
