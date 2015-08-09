@@ -42,8 +42,7 @@ class ComputerPlayer
 
   def explore_jump_moves(piece, board)
     start_pos = piece.pos
-    move_sequence = [start_pos]
-    subsequences = []
+    jump_sequences = []
 
     piece.jump_moves.each do |end_pos|
       duped_board = board.dup
@@ -51,15 +50,15 @@ class ComputerPlayer
       duped_piece.perform_moves([end_pos])
 
       if duped_piece.jump_moves.any?
-        subsequence = explore_jump_moves(duped_piece, duped_board)
-        subsequences << subsequence
-      elsif move_sequence.length == 1
-        move_sequence << end_pos
+        jump_sequences << explore_jump_moves(duped_piece, duped_board)
       end
     end
 
-    return move_sequence unless subsequences.any?
-    move_sequence + subsequences.sort_by(&:length).last
+    if jump_sequences.any?
+      [start_pos] + jump_sequences.sort_by(&:length).last
+    else
+      [start_pos, piece.jump_moves.sample]
+    end
   end
 
   def explore_slide_moves(piece)
