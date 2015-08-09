@@ -5,12 +5,10 @@ require_relative 'computer_player'
 class Game
   attr_reader :current_player, :board, :red, :blue
 
-  def initialize(board, players = nil)
-    players ||= { red:  ComputerPlayer.new(:red, board),
-                  blue: ComputerPlayer.new(:blue, board) }
-
+  def initialize(board, players)
     @board = board
-    @red, @blue = players[:red], players[:blue]
+    @red = players.fetch(:red, ComputerPlayer.new(:red, board))
+    @blue = players.fetch(:blue, ComputerPlayer.new(:blue, board))
     @current_player = blue
   end
 

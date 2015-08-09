@@ -11,19 +11,25 @@ class Piece
     blue: [[-1,  1], [-1, -1]]
   }
 
-  attr_reader :color
+  attr_reader :color, :deltas
   attr_accessor :pos
 
-  def initialize(board, pos, color)
+  def initialize(attributes)
+    color = attributes.fetch(:color)
     raise unless COLORS.include?(color)
+    deltas = DELTAS[color].dup
 
-    @board = board
-    @pos = pos
-    @color = color
-    @king = false
-    @deltas = DELTAS[color]
+    @board = attributes.fetch(:board)
+    @pos = attributes.fetch(:pos)
+    @color = attributes.fetch(:color)
+    @king = attributes.fetch(:king, false)
+    @deltas = attributes.fetch(:deltas, deltas)
 
     board.add_piece(self, pos)
+  end
+
+  def king?
+    @king
   end
 
   def inspect
@@ -92,10 +98,6 @@ class Piece
     color == :blue
   end
 
-  def king?
-    @king
-  end
-
   def ally?(piece)
     self.color == piece.color
   end
@@ -142,7 +144,7 @@ class Piece
   end
 
   private
-  attr_reader :deltas, :board
+  attr_reader :board
 
   def promote
     @king = true
@@ -151,7 +153,7 @@ class Piece
   end
 
   def opponent
-    COLORS.reject { |color| color == self.color }.first
+    COLORS.find { |color| color != self.color }
   end
 
   def perform_slide!(end_pos)

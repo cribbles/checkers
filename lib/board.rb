@@ -72,7 +72,13 @@ class Board
     duped_board = self.class.new
 
     pieces.each do |piece|
-      Piece.new(duped_board, piece.pos, piece.color)
+      Piece.new(
+        board:  duped_board,
+        pos:    piece.pos,
+        color:  piece.color,
+        king:   piece.king?,
+        deltas: piece.deltas
+      )
     end
 
     duped_board
@@ -88,7 +94,12 @@ class Board
 
     (starting_coord...SIZE).step(2) do |col|
       pos = [row, col]
-      self[pos] = Piece.new(self, pos, color)
+
+      self[pos] = Piece.new(
+        board: self,
+        pos: pos,
+        color: color
+      )
     end
   end
 end

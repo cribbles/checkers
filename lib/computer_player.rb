@@ -65,13 +65,10 @@ class ComputerPlayer
 
   def explore_slide_moves(piece)
     start_pos = piece.pos
-    slide_moves = []
 
-    piece.slide_moves.each do |end_pos|
+    piece.slide_moves.each_with_object([]) do |end_pos, slide_moves|
       slide_moves << [start_pos, end_pos]
     end
-
-    slide_moves
   end
 
   def best_moves(possible_jumps, possible_slides)
