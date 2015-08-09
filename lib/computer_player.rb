@@ -1,3 +1,4 @@
+require 'byebug'
 require_relative 'piece'
 
 class ComputerPlayer
@@ -21,16 +22,13 @@ class ComputerPlayer
     pieces.each do |piece|
       if piece.jump_moves.any?
         possible_jumps << explore_jump_moves(piece, board)
-      elsif piece.slide_moves.any?
+      elsif possible_jumps.empty?
         possible_slides << explore_slide_moves(piece)
       end
     end
 
-    if possible_jumps.any?
-      possible_jumps.sort_by(&:length).last
-    else
-      possible_slides.sample.sample
-    end
+    possible_slides.flatten!(1)
+    best_moves(possible_jumps, possible_slides)
   end
 
   private
@@ -38,6 +36,10 @@ class ComputerPlayer
 
   def pieces
     board.pieces.select { |piece| piece.color == self.color }
+  end
+
+  def opponent_pieces
+    board.pieces.reject { |piece| piece.color == self.color }
   end
 
   def explore_jump_moves(piece, board)
@@ -63,9 +65,41 @@ class ComputerPlayer
 
   def explore_slide_moves(piece)
     start_pos = piece.pos
+    slide_moves = []
 
-    piece.slide_moves.inject([]) do |slide_moves, end_pos|
+    piece.slide_moves.each do |end_pos|
       slide_moves << [start_pos, end_pos]
+    end
+
+    slide_moves
+  end
+
+  def best_moves(possible_jumps, possible_slides)
+    if possible_jumps.any?
+      possible_jumps.sort_by(&:length).last
+    else
+      best_slide(possible_slides)
+    end
+  end
+
+  def best_slide(possible_slides)
+    safe_slides = possible_slides.select do |slide|
+      end_pos = slide.last
+      safe_slide?(end_pos)
+    end
+
+    if safe_slides.any?
+      safe_slides.sample
+    else
+      possible_slides.sample
+    end
+  end
+
+  def safe_slide?(end_pos)
+    opponent_pieces.none? do |piece|
+      piece.slide_moves.any? do |slide_pos|
+        slide_pos == end_pos
+      end
     end
   end
 end
