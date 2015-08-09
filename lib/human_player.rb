@@ -19,9 +19,9 @@ class HumanPlayer
   def get_moves
     puts "\nselect your next move(s), e.g. 'd3, e4'"
     print ">"
-    notation = gets.chomp.gsub(/ /,'').split(',')
+    moves = gets.chomp.gsub(/ /,'').split(',')
 
-    abort if notation.first =~ ABORT_REGEX
-    parse(notation)
+    abort if moves.first =~ ABORT_REGEX
+    parse_notation(moves)
   end
 end
