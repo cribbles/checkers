@@ -1,3 +1,5 @@
+require_relative 'piece'
+
 class ComputerPlayer
   attr_reader :color
 

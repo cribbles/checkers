@@ -1,9 +1,9 @@
 require 'byebug'
 require 'colorize'
-require_relative 'modules/traversable'
+require_relative 'chess_utils/chess_utils'
 
 class Piece
-  extend Traversable
+  extend ChessUtils::Traversable
 
   COLORS = [:red, :blue]
 

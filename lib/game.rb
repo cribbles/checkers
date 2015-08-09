@@ -78,9 +78,3 @@ class Game
     [red, blue].find { |player| player.color == board.winner }
   end
 end
-
-class InvalidMoveError < StandardError
-end
-
-class UserInputError < StandardError
-end

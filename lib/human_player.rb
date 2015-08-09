@@ -1,7 +1,8 @@
-require 'byebug'
+require_relative 'piece'
+require_relative 'chess_utils/chess_utils'
 
 class HumanPlayer
-  ABORT_REGEX = /\Aq\z|\Aquit\z|\Aexit\z/
+  include ChessUtils::Notatable
 
   attr_reader :color
 
@@ -22,23 +23,5 @@ class HumanPlayer
 
     abort if notation.first =~ ABORT_REGEX
     parse(notation)
-  end
-
-  private
-
-  def parse(notation)
-    notation.map do |move|
-      raise InvalidMoveError unless notated?(move)
-
-      notated_row, notated_col = move.chars.reverse
-      row = Board::SIZE - notated_row.to_i
-      col = 'abcdefgh'.index(notated_col)
-
-      [row, col]
-    end
-  end
-
-  def notated?(move)
-    move =~ /\A[a-h]{1}[1-8]{1}\z/
   end
 end
