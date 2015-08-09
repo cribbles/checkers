@@ -73,8 +73,10 @@ class ComputerPlayer
   def best_moves(possible_jumps, possible_slides)
     if possible_jumps.any?
       possible_jumps.sort_by(&:length).last
-    else
+    elsif possible_slides.any?
       best_slide(possible_slides)
+    else
+      forfeit
     end
   end
 
@@ -97,5 +99,10 @@ class ComputerPlayer
         slide_pos == end_pos
       end
     end
+  end
+
+  def forfeit
+    puts "\bGame over - #{self} forfeits!\n\n"
+    abort
   end
 end

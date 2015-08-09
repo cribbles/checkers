@@ -21,8 +21,7 @@ class Game
       switch_players!
     end
 
-    display_board
-    puts "Game over!\n\nWinner: #{get_winner}\n\n"
+    end_game
   end
 
   private
@@ -70,6 +69,11 @@ class Game
       piece.perform_moves(moves)
       piece.maybe_promote
     end
+  end
+
+  def end_game
+    display_board
+    puts "Game over!\n\nWinner: #{get_winner}\n\n"
   end
 
   def get_winner
