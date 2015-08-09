@@ -1,4 +1,3 @@
-require 'byebug'
 require 'colorize'
 require_relative 'chess_utils/chess_utils'
 
