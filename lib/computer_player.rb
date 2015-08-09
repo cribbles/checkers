@@ -1,4 +1,3 @@
-require 'byebug'
 require_relative 'piece'
 
 class ComputerPlayer
@@ -82,7 +81,7 @@ class ComputerPlayer
   def best_slide(possible_slides)
     safe_slides = possible_slides.select do |slide|
       end_pos = slide.last
-      safe_slide?(end_pos)
+      safe_landing_pos?(end_pos)
     end
 
     if safe_slides.any?
@@ -92,7 +91,7 @@ class ComputerPlayer
     end
   end
 
-  def safe_slide?(end_pos)
+  def safe_landing_pos?(end_pos)
     opponent_pieces.none? do |piece|
       piece.slide_moves.any? do |slide_pos|
         slide_pos == end_pos
