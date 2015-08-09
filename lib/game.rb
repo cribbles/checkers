@@ -55,7 +55,7 @@ class Game
 
     perform_moves(moves)
   rescue InvalidMoveError => e
-    puts e.to_s unless e.nil?
+    puts e.message unless e.nil?
     puts "invalid move, try again"
     retry
   end

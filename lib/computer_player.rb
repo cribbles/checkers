@@ -21,8 +21,7 @@ class ComputerPlayer
     pieces.each do |piece|
       if piece.jump_moves.any?
         possible_jumps << explore_jump_moves(piece, board)
-      elsif
-        piece.slide_moves.any?
+      elsif piece.slide_moves.any?
         possible_slides << explore_slide_moves(piece)
       end
     end
@@ -49,12 +48,12 @@ class ComputerPlayer
     piece.jump_moves.each do |end_pos|
       duped_board = board.dup
       duped_piece = duped_board[piece.pos]
-      duped_board.move_piece(piece.pos, end_pos)
+      duped_piece.perform_moves([end_pos])
 
       if duped_piece.jump_moves.any?
         subsequence = explore_jump_moves(duped_piece, duped_board)
-        subsequences << move_sequence + subsequence
-      else
+        subsequences << subsequence
+      elsif move_sequence.length == 1
         move_sequence << end_pos
       end
     end
