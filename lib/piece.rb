@@ -35,7 +35,8 @@ class Piece
   end
 
   def to_s
-    " ● ".colorize(color)
+    piece = (king? ? " ♚ " : " ● ")
+    piece.colorize(color)
   end
 
   def perform_moves(move_sequence)
