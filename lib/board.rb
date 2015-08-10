@@ -95,7 +95,7 @@ class Board
     (starting_coord...SIZE).step(2) do |col|
       pos = [row, col]
 
-      self[pos] = Piece.new(
+      Piece.new(
         board: self,
         pos: pos,
         color: color
