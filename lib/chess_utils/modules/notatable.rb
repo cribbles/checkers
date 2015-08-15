@@ -5,7 +5,6 @@ module ChessUtils
     private
 
     def parse_notation(notation)
-      board_size = 8
       notation.map do |move|
         raise InvalidMoveError unless notated?(move)
 
